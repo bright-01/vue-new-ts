@@ -1,6 +1,6 @@
 <template>
   <ul class="news-list">
-    <li v-for="news in listItems" :key="news.id" class="post">
+    <li v-for="news in items" :key="news.id" class="post">
       <div class="points">
         {{ news.points || 0 }}
       </div>
@@ -13,8 +13,10 @@
             >
           </template>
           <template v-else>
-            <router-link :to="`/item/${news.id}`">{{ news.title }}</router-link
-            ><small
+            <router-link :to="`/item/${news.id}`"
+              >{{ news.title }}
+            </router-link>
+            <small
               ><a class="link-text" :href="news.domain" v-if="news.domain"
                 >({{ news.domain }})</a
               ></small
@@ -23,26 +25,45 @@
         </p>
         <small v-if="news.user" class="link-text">
           by
-          <router-link :to="`/user/${news.user}`" class="link-text">{{
-            news.user
-          }}</router-link>
+          <router-link :to="`/user/${news.user}`" class="link-text"
+            >{{ news.user }}
+          </router-link>
         </small>
         <small v-if="news.time_ago" class="link-text">
-          {{ news.time_ago }}
+          <!--          {{ news.time_ago.concat(", 2022") }}-->
+          {{ timeAgo(news) }}
         </small>
       </div>
     </li>
   </ul>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { PropType } from "vue";
+import Vue from "vue";
+import { NewsItem } from "@/api";
+
+export default Vue.extend({
+  props: {
+    items: {
+      type: Array as PropType<NewsItem[]>,
+      required: true,
+    },
+  },
+  methods: {
+    timeAgo(news: NewsItem): string {
+      return news.time_ago.concat(", 2022");
+    },
+  },
   computed: {
-    listItems() {
+    // timeAgo(): string {
+    //   return this.items[0].item_ago.concat();
+    // },
+    listItems(): any {
       return this.$store.getters.fetchedList;
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -50,12 +71,14 @@ export default {
   padding: 0;
   margin: 0;
 }
+
 .post {
   list-style: none;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #eee;
 }
+
 .points {
   width: 80px;
   height: 60px;
@@ -64,9 +87,11 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .link-text {
   color: #828282;
 }
+
 .news-title {
   margin: 0;
 }
