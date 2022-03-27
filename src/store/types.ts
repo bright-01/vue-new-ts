@@ -1,6 +1,7 @@
 import { Mutations } from "@/store/mutations";
-import { CommitOptions, Store } from "vuex";
+import { CommitOptions, DispatchOptions, Store } from "vuex";
 import { RootState } from "@/store/state";
+import { Actions } from "@/store/actions";
 
 type MyMutations = {
   commit<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
@@ -10,7 +11,17 @@ type MyMutations = {
   ): ReturnType<Mutations[K]>;
 };
 
-export type MyStore = Omit<Store<RootState>, "commit"> & MyMutations;
+type MyActions = {
+  dispatch<K extends keyof Actions>(
+    key: K,
+    payload?: Parameters<Actions[K]>[1],
+    options?: DispatchOptions
+  ): ReturnType<Actions[K]>;
+};
+
+export type MyStore =
+  | Omit<Store<RootState>, "commit" | "dispatch">
+  | (MyMutations & MyMutations & MyActions);
 
 // 인터섹션( 합집합 & )
 // type A = {
