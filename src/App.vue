@@ -15,6 +15,7 @@ import Spinner from "./components/Spinner.vue";
 import bus from "./utils/bus";
 import { MutationTypes } from "@/store/mutations";
 import { ActionTypes } from "@/store/actions";
+import "vuex/types/vue";
 export default Vue.extend({
   components: {
     ToolBar,
