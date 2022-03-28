@@ -2,6 +2,7 @@ import { Mutations } from "@/store/mutations";
 import { CommitOptions, DispatchOptions, Store } from "vuex";
 import { RootState } from "@/store/state";
 import { Actions } from "@/store/actions";
+import { Getters } from "@/store/getters";
 
 type MyMutations = {
   commit<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
@@ -19,9 +20,15 @@ type MyActions = {
   ): ReturnType<Actions[K]>;
 };
 
+type MyGetters = {
+  getters: {
+    [K in keyof Getters]: ReturnType<Getters[K]>;
+  };
+};
+
 export type MyStore =
-  | Omit<Store<RootState>, "commit" | "dispatch">
-  | (MyMutations & MyMutations & MyActions);
+  | Omit<Store<RootState>, "commit" | "dispatch" | "getters">
+  | (MyMutations & MyMutations & MyActions) & MyGetters;
 
 // 인터섹션( 합집합 & )
 // type A = {

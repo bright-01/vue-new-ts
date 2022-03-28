@@ -37,6 +37,7 @@ export default Vue.extend({
   async created() {
     this.$store.state.news;
     this.$store.commit(MutationTypes.SET_NEWS, 10);
+    this.$store.getters.fetchedNews;
     const response = await this.$store.display(ActionTypes.FETCH_NEWS);
     bus.$on("on:progress", this.onProgress);
     bus.$on("off:progress", this.offProgress);
